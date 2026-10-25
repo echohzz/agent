@@ -1,0 +1,11 @@
+*.sqlite
+*.sqlite3*
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.*
+smoke-report*.json
+smoke-recheck*.json
+__pycache__/
+.idea/

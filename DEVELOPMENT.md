@@ -2,7 +2,7 @@
 
 ## 开发输入
 
-核心任务：从零实现最小可用 Agent；不使用现成 Agent 框架驱动主流程；使用真实百炼 API；至少三个工具且包含 todo；支持 session、context 管理、异常、trace 和测试。早期模型为 `qwen3.8-max`，当前代码配置为 `kimi-k3`，历史验收结果不等同于当前模型验收结果。
+核心任务：从零实现最小可用 Agent；不使用现成 Agent 框架驱动主流程；使用真实百炼 API；至少三个工具且包含 todo；支持 session、context 管理、异常、trace 和测试。当前模型配置为 `kimi-k3`，历史验收结果不等同于当前模型验收结果。
 
 实现提示的关键约束：模型应依据工具 Schema 自行决策；search 必须说明是离线 mock；工具失败不可编造成功；待办按用户及窗口隔离。运行时系统提示见 `agent/runtime.py` 的 `SYSTEM_PROMPT`，工具描述及参数 Schema 见 `agent/tools.py`，均为实际传给模型的内容。
 
@@ -18,7 +18,7 @@
 | 工具失败不能假报成功，中断不能重复添加待办 | 校验参数、记录结果、事务与调用 ID 去重，测试回滚和进程中断恢复 |
 | 用真实模型验收并如实记录失败 | `smoke_real.py` 检查工具和数据库状态，额度失败保留原始原因 |
 
-1. 查阅百炼模型列表，确认 `qwen3.8-max` 型号。用真实 API 测试了普通回复和 function calling，响应包含 `content`、`tool_calls` 和 `reasoning_content`。运行时解析这三类字段；`reasoning_content` 原文只进入模型事件日志，不回灌给模型。
+1. 查阅百炼模型列表，确认型号。用真实 API 测试了普通回复和 function calling，响应包含 `content`、`tool_calls` 和 `reasoning_content`。运行时解析这三类字段；`reasoning_content` 原文只进入模型事件日志，不回灌给模型。
 2. 用标准库 `urllib.request` 调百炼 OpenAI-compatible Chat Completions，减少依赖。SQLite 保存用户 / session 组合对应的对话、待办和 trace，重启后可续聊。
 3. 初次单元测试在 Windows 的临时目录清理时遇到 SQLite 文件占用；测试结束时显式关闭数据库连接后通过。
 4. 第一次真实工具链运行完成后，Windows GBK 终端无法打印模型回复中的 emoji，导致进程报编码错误；CLI 将输出编码设为 UTF-8。再次调用完成 `calculator -> todo -> 最终回答`，并通过数据库 trace 核对工具调用。

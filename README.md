@@ -188,7 +188,7 @@ py smoke_real.py --case test_09_summary_followup test_10_search_scope --report s
 2026-10-25 历史验证：40 项离线测试全部通过，含使用子进程强制退出后的恢复测试。当时使用 `qwen3.8-max` 的真实验收前 8 项通过；第 9 项在摘要请求时、第 10 项在首个请求时，均遇到百炼 HTTP 403（免费额度耗尽）。本地报告保留原始失败原因；这不是完整的 10/10 通过记录，也不能作为当前 `kimi-k3` 的验收结果。当前模型需要用上述脚本重新验收。生成报告包含测试对话，默认不提交 Git，可在检查后作为验收附件单独提供。
 
 ## 7. 设计取舍
-- 使用百炼 OpenAI-compatible Chat Completions 接口，当前模型为 `agent/model.py` 中的 `kimi-k3`；账户需有该模型的访问权限和可用额度。
+- 使用百炼 OpenAI-compatible Chat Completions 接口，当前模型为 `agent/model.py` 中的 `kimi-k3`；账户需有该模型的访问权限和可用额度或者更换其他模型。
 - 使用 Python 标准库实现 HTTP、SQLite、参数校验和 CLI，减少依赖，突出 Agent Runtime 本身。
 - `search` 使用 mock，因为题目明确允许；它不伪装成实时搜索。
 - 记录 `reasoning_content` 是为了满足题目对模型输出解析和 Trace 的要求；该字段不作为后续模型上下文，避免把内部推理当作事实记忆。
